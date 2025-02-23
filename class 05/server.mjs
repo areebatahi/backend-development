@@ -17,23 +17,30 @@ app.get('/users', (req, res) => {
 })
 
 // add data in server
-app.post('/useradd', (req, res) => {
+app.post('/users', (req, res) => {
   console.log(req.body); // data ko server sy ly ga
-  users.push({ ...req.body, id: users.length + 1 }); // push in array 
+  // users.push({ ...req.body, id: users.length + 1 }); // push in array mehod 1
+  users.push({ ...req.body, id: Date.now().toString(36) }); // push in array mehod 2
   res.send('user added successfully');
 })
 
 // delete data in server
 app.delete('/users/:id', (req, res) => {
   const { id } = req.params;
-  const index = users.findIndex(user => user.id === parseInt(id));
+  // good mehod 2 time loop work
+  const index = users.findIndex(user => user.id === id);
   users.splice(index, 1)
-  res.send({ users });
+  // 1 time loop work 
+  users = users.filter(obj => obj.id !== id)
+  res.send({ users, mss: 'user delete successfully' });
 })
 
 // update data in server
-app.put('/users/:id',(req, res)=>{
-
+app.put('/users/:id', (req, res) => {
+  const { id } = req.params;
+  const index = users.findIndex(user => user.id === id);
+  users.splice(index, 1, { ...req.body, id });
+  res.send({ user: req.body, mss: 'user update successfully', ...users });
 })
 
 app.listen(port, () => {
