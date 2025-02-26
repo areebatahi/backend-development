@@ -1,9 +1,12 @@
 import express from 'express'
+import cors from 'cors'
+
 const app = express()
 const port = process.env.PORT || 3000
 
 let users = []
 
+app.use(cors())
 app.use(express.json()) // data ko convert kry ga { json sy js }
 
 // getting data from server
